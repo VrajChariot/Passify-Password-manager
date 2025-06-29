@@ -8,8 +8,6 @@ import Loader from './components/loader.jsx'
 function App() {
   const [Submitted, setSubmitted] = useState(false);
   const [type, settype] = useState(false);
-  const [pass, setpass] = useState("");
-  // const [confirmPass, setconfirmPass] = useState("")
   const [copied, setcopied] = useState(false);
 
   const {
@@ -20,13 +18,6 @@ function App() {
     watch,
     setValue
   } = useForm();
-
-  let PassValue = watch("password");
-  useEffect(() => {
-    if(PassValue){
-      setpass(PassValue);
-    }
-  }, [PassValue])
 
   const onSubmit = async values => {
     // Here you can handle the form submission, e.g., send data to an API
@@ -72,7 +63,7 @@ function App() {
   };
   
   const ConfirmPassword = (value) => { 
-    if (value != pass) {
+    if (watch("password") != watch("ConfirmPassword")) {
       return 'Passwords do not match.';
     }
     return true; // Validation passed
@@ -179,7 +170,7 @@ function App() {
               required: 'Password is required.',
             })} />
             <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {settype(!type)}}><FaEye/></button>
-           <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {navigator.clipboard.writeText(pass)
+           <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {navigator.clipboard.writeText(watch("password")) //
 setcopied(true);
 setTimeout(() => {
   setcopied(false);
