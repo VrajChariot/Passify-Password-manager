@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import {FaEye} from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import Loader from './components/loader.jsx'
@@ -9,6 +9,7 @@ function App() {
   const [Submitted, setSubmitted] = useState(false);
   const [type, settype] = useState(false);
   const [pass, setpass] = useState("");
+  // const [confirmPass, setconfirmPass] = useState("")
   const [copied, setcopied] = useState(false);
 
   const {
@@ -16,8 +17,16 @@ function App() {
     register,
     formState: { errors, isSubmitting },
     reset,
+    watch,
     setValue
   } = useForm();
+
+  let PassValue = watch("password");
+  useEffect(() => {
+    if(PassValue){
+      setpass(PassValue);
+    }
+  }, [PassValue])
 
   const onSubmit = async values => {
     // Here you can handle the form submission, e.g., send data to an API
@@ -58,8 +67,16 @@ function App() {
       return 'Password must contain at least one numerical value.';
 
     }
+
     return true; // Validation passed
   };
+  
+  const ConfirmPassword = (value) => { 
+    if (value != pass) {
+      return 'Passwords do not match.';
+    }
+    return true; // Validation passed
+   }
 
   function RandomPassGen() {
     const length = 12; // Fixed length
@@ -90,8 +107,13 @@ function App() {
     // let FinalPass = RandomPass.sort(() => Math.random() - 0.5).join('');
     let FinalPass = MoreRandomPass.join('');
     console.log(FinalPass);
-    setpass(FinalPass);
+    // setpass(FinalPass);
     setValue('password', FinalPass, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true
+    });
+    setValue('ConfirmPassword', FinalPass, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true
@@ -156,6 +178,7 @@ function App() {
               validate: validatePassword,
               required: 'Password is required.',
             })} />
+            <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {settype(!type)}}><FaEye/></button>
            <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {navigator.clipboard.writeText(pass)
 setcopied(true);
 setTimeout(() => {
@@ -163,9 +186,27 @@ setTimeout(() => {
 }
 , 3000)
            }}><MdContentCopy /></button>
-           <button type='button' className='bg-blue-300 px-3 py-3 rounded-md' onClick={() => {settype(!type)}}><FaEye/></button>
+           {/* confirm pass section */}
           </div>
           {errors.password && <p className='text-red-400'>{errors.password.message}</p>}
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="ConfirmPassword" className="block text-gray-300 text-sm font-medium">
+            Confrim Password
+          </label>
+          {/* For pass add validations: {minlenght: 6, compulsory chars: special, maxlenght: 16} */}
+          <div className='flex items-center gap-3 '>
+          <input
+            type={type? "text" : "password"}
+            id="ConfirmPassword"
+            placeholder="Enter password again"
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {...register("ConfirmPassword", {
+              validate: ConfirmPassword,
+              required: 'Password is required.',
+            })} />
+          </div>
+          {errors.ConfirmPassword && <p className='text-red-400'>{errors.ConfirmPassword.message}</p>}
         </div>
         <button
           onClick={() => RandomPassGen()}
