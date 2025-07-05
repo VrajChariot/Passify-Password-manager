@@ -1,24 +1,7 @@
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 
-const demoPasswords = [
-  {
-    id: 1,
-    title: "Gmail Account",
-    url: "https://gmail.com",
-    password: "Demo@123",
-    createdAt: "2024-01-20",
-  },
-  {
-    id: 2,
-    title: "GitHub",
-    url: "https://github.com",
-    password: "Test@456",
-    createdAt: "2024-01-21",
-  },
-];
-
-const PasswordList = () => {
+const PasswordList = (props) => {
   return (
     <div className="container mx-auto">
       {/* Search Bar */}
@@ -32,7 +15,7 @@ const PasswordList = () => {
 
       {/* Password Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {demoPasswords.map((pass) => (
+        {props.passwords.map((pass) => (
           <div key={pass.id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <div className="flex justify-between items-start mb-3">
               <h3 className="text-xl font-semibold text-white">{pass.title}</h3>
