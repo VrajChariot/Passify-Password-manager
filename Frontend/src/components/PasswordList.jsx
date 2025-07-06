@@ -16,9 +16,9 @@ const PasswordList = (props) => {
       {/* Password Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {props.passwords.map((pass) => (
-          <div key={pass.id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
+          <div key={pass._id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <div className="flex justify-between items-start mb-3">
-              <h3 className="text-xl font-semibold text-white">{pass.title}</h3>
+              <h3 className="text-xl font-semibold text-white">{pass.Title}</h3>
               <div className="flex gap-2">
                 <button className="p-2 text-gray-400 hover:text-blue-500">
                   <FaEdit size={16} />
@@ -31,19 +31,19 @@ const PasswordList = (props) => {
 
             <div className="text-gray-400 mb-3">
               <a
-                href={pass.url}
+                href={pass.URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 truncate block"
               >
-                {pass.url}
+                {pass.URL}
               </a>
             </div>
 
             <div className="flex items-center gap-2 bg-gray-700 p-2 rounded">
               <input
                 type="password"
-                value={pass.password}
+                value={pass.Password}
                 readOnly
                 className="bg-transparent flex-1 text-gray-300 border-none focus:outline-none"
               />
