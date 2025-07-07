@@ -144,7 +144,7 @@ function App() {
           {/* Cyberpunk-style Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-2">
-              SECURE VAULT
+              PASSIFY
             </h1>
             <p className="text-cyan-400/80 text-sm md:text-base">
               Next-Gen Password Management System
