@@ -1,7 +1,32 @@
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
-const PasswordList = (props) => {
+const PasswordList = (state) => {
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/pass")
+      .then((res) => {
+        console.log("Fetched Passwords:", res.data);
+        setPasswords(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching passwords:", err);
+      });
+  }, [state]);
+  // this is the state which contains the passwords, it in is the form of an array
+  // each password is an object with properties like _id, Title, URL, and Password
+  const [Passwords, setPasswords] = useState([]);
+
+  const HandlevView = (id) => {
+    let NewPassList = [...Passwords, { View: false }];
+    let PassToUpdate = NewPassList.find((pass) => pass._id === id);
+    PassToUpdate.View = !PassToUpdate.View;
+    setPasswords(NewPassList);
+  }
+
+
   return (
     <div className="container mx-auto">
       {/* Search Bar */}
@@ -15,7 +40,8 @@ const PasswordList = (props) => {
 
       {/* Password Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {props.passwords.map((pass) => (
+        {Passwords.map((pass) => {
+          return (pass._id !== " ") && (
           <div key={pass._id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <div className="flex justify-between items-start mb-3">
               <h3 className="text-xl font-semibold text-white">{pass.Title}</h3>
@@ -42,20 +68,26 @@ const PasswordList = (props) => {
 
             <div className="flex items-center gap-2 bg-gray-700 p-2 rounded">
               <input
-                type="password"
+                type={pass.View ? "text" : "password"}
                 value={pass.Password}
                 readOnly
                 className="bg-transparent flex-1 text-gray-300 border-none focus:outline-none"
               />
               <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
-                <FaEye size={14} />
+                <FaEye
+                  size={14}
+                  onClick={() => {
+                    HandlevView(pass._id);
+                  }}
+                />
               </button>
               <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
                 <MdContentCopy size={14} />
               </button>
             </div>
-          </div>
-        ))}
+          </div>)
+
+})}
       </div>
     </div>
   );
