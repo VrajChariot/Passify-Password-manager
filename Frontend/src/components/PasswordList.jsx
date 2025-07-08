@@ -1,7 +1,37 @@
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
-const PasswordList = (props) => {
+const PasswordList = (state) => {
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/pass")
+      .then((res) => {
+        const modifiedData = res.data.map((item) => ({
+          ...item,
+          View: false, // Add View property to each password object
+        }));
+        setPasswords(modifiedData);
+      })
+      .catch((err) => {
+        console.error("Error fetching passwords:", err);
+      });
+  }, [state]);
+  // this is the state which contains the passwords, it in is the form of an array
+  // each password is an object with properties like _id, Title, URL, and Password
+  const [Passwords, setPasswords] = useState([]);
+
+  const HandlevView = (id) => {
+    const updatedList = Passwords.map((pass) => {
+      if (pass._id === id) {
+        return { ...pass, View: !pass.View };
+      }
+      return pass;
+    });
+    setPasswords(updatedList); // Filter out any empty entries
+  };
+
   return (
     <div className="container mx-auto">
       {/* Search Bar */}
@@ -15,47 +45,61 @@ const PasswordList = (props) => {
 
       {/* Password Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {props.passwords.map((pass) => (
-          <div key={pass._id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="text-xl font-semibold text-white">{pass.Title}</h3>
-              <div className="flex gap-2">
-                <button className="p-2 text-gray-400 hover:text-blue-500">
-                  <FaEdit size={16} />
-                </button>
-                <button className="p-2 text-gray-400 hover:text-red-500">
-                  <FaTrash size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="text-gray-400 mb-3">
-              <a
-                href={pass.URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-400 truncate block"
+        {Passwords.map((pass) => {
+          return (
+            pass._id !== "" && (
+              <div
+                key={pass._id}
+                className="bg-gray-800 p-4 rounded-lg shadow-lg"
               >
-                {pass.URL}
-              </a>
-            </div>
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-xl font-semibold text-white">
+                    {pass.Title}
+                  </h3>
+                  <div className="flex gap-2">
+                    <button className="p-2 text-gray-400 hover:text-blue-500">
+                      <FaEdit size={16} />
+                    </button>
+                    <button className="p-2 text-gray-400 hover:text-red-500">
+                      <FaTrash size={16} />
+                    </button>
+                  </div>
+                </div>
 
-            <div className="flex items-center gap-2 bg-gray-700 p-2 rounded">
-              <input
-                type="password"
-                value={pass.Password}
-                readOnly
-                className="bg-transparent flex-1 text-gray-300 border-none focus:outline-none"
-              />
-              <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
-                <FaEye size={14} />
-              </button>
-              <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
-                <MdContentCopy size={14} />
-              </button>
-            </div>
-          </div>
-        ))}
+                <div className="text-gray-400 mb-3">
+                  <a
+                    href={pass.URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 truncate block"
+                  >
+                    {pass.URL}
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-2 bg-gray-700 p-2 rounded">
+                  <input
+                    type={pass.View ? "text" : "password"}
+                    value={pass.Password}
+                    readOnly
+                    className="bg-transparent flex-1 text-gray-300 border-none focus:outline-none"
+                  />
+                  <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
+                    <FaEye
+                      size={14}
+                      onClick={() => {
+                        HandlevView(pass._id);
+                      }}
+                    />
+                  </button>
+                  <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
+                    <MdContentCopy size={14} />
+                  </button>
+                </div>
+              </div>
+            )
+          );
+        })}
       </div>
     </div>
   );

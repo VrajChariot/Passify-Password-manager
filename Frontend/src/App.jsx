@@ -4,28 +4,26 @@ import { FaEye } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import Loader from "./components/loader.jsx";
 import PasswordList from "./components/PasswordList.jsx";
-import axios from "axios";
 import LetterGlitch from "./components/LetterGlitch.jsx";
 
 function App() {
   const [Submitted, setSubmitted] = useState(false);
   const [type, settype] = useState(false);
   const [copied, setcopied] = useState(false);
-  const [Passwords, setPasswords] = useState([]);
   const [state, setstate] = useState([]);
 
-  useEffect(() => {
-    const url = "http://localhost:3000/pass";
-    axios
-      .get("http://localhost:3000/pass")
-      .then((res) => {
-        console.log("Fetched Passwords:", res.data);
-        setPasswords(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching passwords:", err);
-      });
-  }, [state]);
+  // useEffect(() => {
+  //   const url = "http://localhost:3000/pass";
+  //   axios
+  //     .get("http://localhost:3000/pass")
+  //     .then((res) => {
+  //       console.log("Fetched Passwords:", res.data);
+  //       setPasswords(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching passwords:", err);
+  //     });
+  // }, [state]);
 
   const {
     handleSubmit,
@@ -316,7 +314,7 @@ function App() {
             <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-8">
               Secured Credentials
             </h2>
-            <PasswordList passwords={Passwords} />
+            <PasswordList state={state} />
           </div>
         </div>
 
