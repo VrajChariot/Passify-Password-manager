@@ -46,6 +46,16 @@ password: ${req.body.password}`);
   }
 });
 
+app.delete("/pass/:id", async (req, res) => {
+  try {
+    await PassData.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Example app listening on http://localhost:${port}/`);
 });

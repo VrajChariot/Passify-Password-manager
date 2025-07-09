@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { set, useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
+import axios from "axios";
 import Loader from "./components/loader.jsx";
 import PasswordList from "./components/PasswordList.jsx";
 import LetterGlitch from "./components/LetterGlitch.jsx";
@@ -33,6 +34,21 @@ function App() {
     watch,
     setValue,
   } = useForm();
+
+    const handleEditFromList = async (passData) => {
+      try {
+        // Delete from DB
+        await axios.delete(`http://localhost:3000/pass/${passData._id}`);
+        setstate(passData);
+
+        // Set form values
+        setValue("title", passData.Title);
+        setValue("url", passData.URL);
+        setValue("password", passData.Password); // decrypted if needed
+      } catch (err) {
+        console.error("Edit handling failed:", err);
+      }
+    };
 
   const onSubmit = async (values) => {
     try {
@@ -314,7 +330,10 @@ function App() {
             <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-8">
               Secured Credentials
             </h2>
-            <PasswordList state={state} />
+            <PasswordList
+              state={state}
+              handleEditFromList={handleEditFromList}
+            />
           </div>
         </div>
 

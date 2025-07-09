@@ -3,7 +3,7 @@ import { MdContentCopy } from "react-icons/md";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-const PasswordList = (state) => {
+const PasswordList = ({ state, handleEditFromList }) => {
   useEffect(() => {
     axios
       .get("http://localhost:3000/pass")
@@ -32,6 +32,37 @@ const PasswordList = (state) => {
     setPasswords(updatedList); // Filter out any empty entries
   };
 
+  async function handleDelete(id) {
+    try {
+      await axios.delete(`http://localhost:3000/pass/${id}`);
+      setPasswords((prev) => prev.filter((pass) => pass._id !== id));
+    } catch (error) {
+      console.error("Error deleting password:", error);
+    }
+  }
+
+  const handleEdit = async (pass) => {
+    if (!pass || !pass._id) return;
+
+    try {
+      // Call the onEdit handler passed from App
+      handleEditFromList(pass);
+    } catch (err) {
+      console.error("Error editing password:", err);
+    }
+  };
+
+  const handleCopy = (password) => {
+    navigator.clipboard
+      .writeText(password)
+      .then(() => {
+        alert("Password copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy password:", err);
+      });
+  };
+
   return (
     <div className="container mx-auto">
       {/* Search Bar */}
@@ -57,10 +88,16 @@ const PasswordList = (state) => {
                     {pass.Title}
                   </h3>
                   <div className="flex gap-2">
-                    <button className="p-2 text-gray-400 hover:text-blue-500">
+                    <button
+                      className="p-2 text-gray-400 hover:text-blue-500"
+                      onClick={() => handleEdit(pass)}
+                    >
                       <FaEdit size={16} />
                     </button>
-                    <button className="p-2 text-gray-400 hover:text-red-500">
+                    <button
+                      className="p-2 text-gray-400 hover:text-red-500"
+                      onClick={() => handleDelete(pass._id)}
+                    >
                       <FaTrash size={16} />
                     </button>
                   </div>
@@ -92,7 +129,10 @@ const PasswordList = (state) => {
                       }}
                     />
                   </button>
-                  <button className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8">
+                  <button
+                    className="p-1 hover:text-white text-gray-400 flex items-center justify-center w-8 h-8"
+                    onClick={() => handleCopy(pass.Password)}
+                  >
                     <MdContentCopy size={14} />
                   </button>
                 </div>
