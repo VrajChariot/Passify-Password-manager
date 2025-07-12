@@ -13,19 +13,6 @@ function App() {
   const [copied, setcopied] = useState(false);
   const [state, setstate] = useState([]);
 
-  // useEffect(() => {
-  //   const url = "http://localhost:3000/pass";
-  //   axios
-  //     .get("http://localhost:3000/pass")
-  //     .then((res) => {
-  //       console.log("Fetched Passwords:", res.data);
-  //       setPasswords(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error fetching passwords:", err);
-  //     });
-  // }, [state]);
-
   const {
     handleSubmit,
     register,
