@@ -1,31 +1,28 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { ClerkProvider } from "@clerk/clerk-react";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
-import './index.css'
-import App from './App.jsx'
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./index.css";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const SIGN_IN_REDIRECT = import.meta.env.VITE_CLERK_SIGN_IN_FORCE_REDIRECT_URL;
+const SIGN_UP_REDIRECT = import.meta.env.VITE_CLERK_SIGN_UP_FORCE_REDIRECT_URL;
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <SignedIn>
+  <React.StrictMode>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      signInForceRedirectUrl={SIGN_IN_REDIRECT}
+      signUpForceRedirectUrl={SIGN_UP_REDIRECT}
+    >
+      <BrowserRouter>
         <App />
-      </SignedIn>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
+      </BrowserRouter>
     </ClerkProvider>
-  </StrictMode>
+  </React.StrictMode>
 );
