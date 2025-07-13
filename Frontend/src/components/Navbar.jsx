@@ -1,5 +1,10 @@
 import React from "react";
-import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/clerk-react";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+  SignInButton,
+} from "@clerk/clerk-react";
 import { NavLink } from "react-router";
 
 const Navbar = () => {
@@ -11,13 +16,21 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             <NavLink
               to={"/"}
-              className="text-white px-4 py-2 hover:bg-gray-700 rounded"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-white px-4 py-2 bg-gray-700 rounded"
+                  : "text-white px-4 py-2 hover:bg-gray-700 rounded"
+              }
             >
               Home
             </NavLink>
             <NavLink
               to={"/dashboard"}
-              className="text-white px-4 py-2 hover:bg-gray-700 rounded"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-white px-4 py-2 bg-gray-700 rounded"
+                  : "text-white px-4 py-2 hover:bg-gray-700 rounded"
+              }
             >
               Dashboard
             </NavLink>
@@ -25,8 +38,7 @@ const Navbar = () => {
               <UserButton />
             </SignedIn>
             <SignedOut>
-              <SignInButton
-                className="text-white px-4 py-2 hover:bg-gray-700 rounded cursor-pointer"/>
+              <SignInButton className="text-white px-4 py-2 hover:bg-gray-700 rounded cursor-pointer" />
             </SignedOut>
           </div>
         </div>

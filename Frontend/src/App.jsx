@@ -1,7 +1,7 @@
 import { Routes, Route, createBrowserRouter } from "react-router-dom";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 import LandingPage from "./pages/LandingPage";
-import Dashboard from "./pages/dashboard"; // your main app
+import Dashboard from "./pages/dashboard"; 
 
 const App = () => {
   return (

@@ -2,25 +2,48 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
 
 const PasswordList = ({ state, handleEditFromList }) => {
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/pass")
-      .then((res) => {
-        const modifiedData = res.data.map((item) => ({
-          ...item,
-          View: false, // Add View property to each password object
-        }));
-        setPasswords(modifiedData);
-      })
-      .catch((err) => {
-        console.error("Error fetching passwords:", err);
-      });
-  }, [state]);
-  // this is the state which contains the passwords, it in is the form of an array
-  // each password is an object with properties like _id, Title, URL, and Password
-  const [Passwords, setPasswords] = useState([]);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3000/pass")
+  //     .then((res) => {
+  //       const modifiedData = res.data.map((item) => ({
+  //         ...item,
+  //         View: false, // Add View property to each password object
+  //       }));
+  //       setPasswords(modifiedData);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching passwords:", err);
+  //     });
+  // }, [state]);
+    const { getToken } = useAuth();
+      const [Passwords, setPasswords] = useState([]);
+
+    useEffect(() => {
+      async function fetchPasswords() {
+        try {
+          const token = await getToken(); // get Clerk JWT token
+          const res = await axios.get("http://localhost:3000/pass", {
+            headers: {
+              Authorization: `Bearer ${token}`, // pass token in header
+            },
+          });
+          const modifiedData = res.data.map((item) => ({
+            ...item,
+            View: false,
+          }));
+          setPasswords(modifiedData);
+        } catch (err) {
+          console.error("Error fetching passwords:", err);
+        }
+      }
+
+      fetchPasswords();
+    }, [state, getToken]);
+
 
   const HandlevView = (id) => {
     const updatedList = Passwords.map((pass) => {
