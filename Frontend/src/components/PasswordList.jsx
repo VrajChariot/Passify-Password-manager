@@ -5,45 +5,30 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 
 const PasswordList = ({ state, handleEditFromList }) => {
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3000/pass")
-  //     .then((res) => {
-  //       const modifiedData = res.data.map((item) => ({
-  //         ...item,
-  //         View: false, // Add View property to each password object
-  //       }));
-  //       setPasswords(modifiedData);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error fetching passwords:", err);
-  //     });
-  // }, [state]);
-    const { getToken } = useAuth();
-      const [Passwords, setPasswords] = useState([]);
+  const { getToken } = useAuth();
+  const [Passwords, setPasswords] = useState([]);
 
-    useEffect(() => {
-      async function fetchPasswords() {
-        try {
-          const token = await getToken(); // get Clerk JWT token
-          const res = await axios.get("http://localhost:3000/pass", {
-            headers: {
-              Authorization: `Bearer ${token}`, // pass token in header
-            },
-          });
-          const modifiedData = res.data.map((item) => ({
-            ...item,
-            View: false,
-          }));
-          setPasswords(modifiedData);
-        } catch (err) {
-          console.error("Error fetching passwords:", err);
-        }
+  useEffect(() => {
+    async function fetchPasswords() {
+      try {
+        const token = await getToken(); // get Clerk JWT token
+        const res = await axios.get("http://localhost:3000/pass", {
+          headers: {
+            Authorization: `Bearer ${token}`, // pass token in header
+          },
+        });
+        const modifiedData = res.data.map((item) => ({
+          ...item,
+          View: false,
+        }));
+        setPasswords(modifiedData);
+      } catch (err) {
+        console.error("Error fetching passwords:", err);
       }
+    }
 
-      fetchPasswords();
-    }, [state, getToken]);
-
+    fetchPasswords();
+  }, [state, getToken]);
 
   const HandlevView = (id) => {
     const updatedList = Passwords.map((pass) => {
@@ -57,7 +42,12 @@ const PasswordList = ({ state, handleEditFromList }) => {
 
   async function handleDelete(id) {
     try {
-      await axios.delete(`http://localhost:3000/pass/${id}`);
+      const token = await getToken(); // get Clerk JWT token
+      await axios.delete(`http://localhost:3000/pass/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // pass token in header
+        },
+      });
       setPasswords((prev) => prev.filter((pass) => pass._id !== id));
     } catch (error) {
       console.error("Error deleting password:", error);

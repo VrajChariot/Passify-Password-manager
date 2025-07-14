@@ -11,7 +11,13 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(clerkMiddleware());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,13 +30,13 @@ async function startServer() {
 
     // ✅ Routes that require user auth
     app.get("/pass", requireAuth(), async (req, res) => {
-     const { userId } = req.auth();
+      const { userId } = req.auth();
       const PasswordData = await PassData.find({ userId }).sort({ _id: -1 });
       res.send(PasswordData);
     });
 
     app.post("/post", requireAuth(), async (req, res) => {
-  const { userId } = req.auth();
+      const { userId } = req.auth();
       try {
         await PassData.create({
           Title: req.body.title,
@@ -46,7 +52,7 @@ async function startServer() {
     });
 
     app.delete("/pass/:id", requireAuth(), async (req, res) => {
-  const { userId } = req.auth();
+      const { userId } = req.auth();
       try {
         const item = await PassData.findById(req.params.id);
         if (!item || item.userId !== userId) {
