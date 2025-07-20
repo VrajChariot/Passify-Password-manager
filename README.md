@@ -1,5 +1,4 @@
 # Passify - Password Manager 🛡️
-==============================
 
 Passify is a secure and minimalistic password manager built using the **MERN stack (MongoDB, Express, React, Node.js)** with **Clerk** authentication and **Tailwind CSS** for a responsive UI. Each user has access only to their own encrypted set of passwords.
 
@@ -75,7 +74,7 @@ git clone https://github.com/yourusername/Passify-Password-Manager.git  cd Passi
 
 1.  Install dependencies:
     
-`   # For client  cd client && npm install  # For server  cd ../server && npm install   `
+`   # For Frontend  cd Frontend && npm install  # For server  cd ../Backend && npm install   `
 
 1.  Create .env files:
     
@@ -84,7 +83,7 @@ git clone https://github.com/yourusername/Passify-Password-Manager.git  cd Passi
 1.  Run the app:
     
 
-`   # Start backend  cd server && npm run dev  # Start frontend  cd ../client && npm start   `
+`   # Start backend  cd server && npm run dev  # Start frontend  cd ../Frontend && npm start   `
 
 ## 🤝 Contributions
 ----------------
